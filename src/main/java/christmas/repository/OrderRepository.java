@@ -4,7 +4,6 @@ import christmas.constant.ErrorMessage;
 import christmas.domain.Menu;
 import christmas.domain.MenuCategory;
 import christmas.domain.Order;
-import christmas.domain.VisitDay;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ public class OrderRepository {
     private static final int MAX_QUANTITY = 20;
     private static final OrderRepository instance = new OrderRepository();
     private List<Order> orders;
-    private VisitDay visitDay;
 
     private OrderRepository() {
         this.orders = new ArrayList<>();
@@ -22,10 +20,6 @@ public class OrderRepository {
 
     public static OrderRepository getInstance() {
         return instance;
-    }
-
-    public void saveVisitDay(int visitDayRaw) {
-        this.visitDay = new VisitDay(visitDayRaw);
     }
 
     public void saveMenus(Map<String, Integer> menus) {
@@ -36,6 +30,40 @@ public class OrderRepository {
 
         validateOrders(ordersBeforeValidate);
         this.orders = ordersBeforeValidate;
+    }
+
+    public List<String> parseOrders() {
+        return orders.stream()
+                .map(Order::getInformation)
+                .toList();
+    }
+
+    public int getTotalAmount() {
+        int totalAmount = 0;
+        for (Order order : orders) {
+            totalAmount += (order.getMenu().getPrice() * order.getQuantity());
+        }
+        return totalAmount;
+    }
+
+    public int getDessertNumbers() {
+        int dessertCount = 0;
+        for (Order order : orders) {
+            if (order.getMenu().getMenuCategory().equals(MenuCategory.DESSERT)) {
+                dessertCount += 1;
+            }
+        }
+        return dessertCount;
+    }
+
+    public int getMainNumbers() {
+        int mainCount = 0;
+        for (Order order : orders) {
+            if (order.getMenu().getMenuCategory().equals(MenuCategory.MAIN)) {
+                mainCount += 1;
+            }
+        }
+        return mainCount;
     }
 
     private void validateOrders(List<Order> orders) {

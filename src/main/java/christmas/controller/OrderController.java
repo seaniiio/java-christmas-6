@@ -1,5 +1,6 @@
 package christmas.controller;
 
+import christmas.dto.ReceiptDto;
 import christmas.service.OrderService;
 import christmas.util.InputProcessor;
 import christmas.view.InputView;
@@ -22,6 +23,7 @@ public class OrderController {
         InputProcessor.continueUntilNormalInput(this::processVisitDay, outputView::printErrorMessage);
         InputProcessor.continueUntilNormalInput(this::processMenuInput, outputView::printErrorMessage);
 
+        ReceiptDto receiptDto = orderService.calculate();
     }
 
     private void processVisitDay() {

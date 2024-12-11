@@ -28,4 +28,8 @@ public class Order {
     public int getQuantity() {
         return quantity;
     }
+
+    public String getInformation() {
+        return menu.getName() + " " + quantity + "개";
+    }
 }
