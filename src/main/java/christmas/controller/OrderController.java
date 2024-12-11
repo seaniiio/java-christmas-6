@@ -1,6 +1,7 @@
 package christmas.controller;
 
 import christmas.service.OrderService;
+import christmas.util.InputProcessor;
 import christmas.view.InputView;
 import christmas.view.OutputView;
 
@@ -17,7 +18,11 @@ public class OrderController {
     }
 
     public void run() {
+        outputView.printWelcomeMessage();
+        InputProcessor.continueUntilNormalInput(this::processVisitDay, outputView::printErrorMessage);
+    }
 
-
+    private void processVisitDay() {
+        orderService.setVisitDay(inputView.getVisitDayInput());
     }
 }
