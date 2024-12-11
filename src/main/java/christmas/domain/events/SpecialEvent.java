@@ -2,7 +2,7 @@ package christmas.domain.events;
 
 import java.util.List;
 
-public class SpecialEvent {
+public class SpecialEvent implements Event{
 
     private final List<Integer> specialDay = List.of(3, 10, 17, 24, 25, 31);
     private static final int DISCOUNT_AMOUNT = 1_000;
@@ -12,6 +12,7 @@ public class SpecialEvent {
         this.day = day;
     }
 
+    @Override
     public int getDiscountAmount() {
         if (specialDay.contains(day)) {
             return DISCOUNT_AMOUNT;
@@ -19,6 +20,7 @@ public class SpecialEvent {
         return 0;
     }
 
+    @Override
     public String getInformation() {
         if (getDiscountAmount() == 0) {
             return "";

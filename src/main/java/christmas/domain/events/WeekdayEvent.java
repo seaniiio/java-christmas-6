@@ -1,6 +1,6 @@
 package christmas.domain.events;
 
-public class WeekdayEvent {
+public class WeekdayEvent implements Event {
 
     private static final int DISCOUNT_UNIT = 2_023;
     private final boolean isWeekend;
@@ -11,6 +11,7 @@ public class WeekdayEvent {
         this.dessertCount = dessertCount;
     }
 
+    @Override
     public int getDiscountAmount() {
         if (!isWeekend) {
             return dessertCount * DISCOUNT_UNIT;
@@ -18,6 +19,7 @@ public class WeekdayEvent {
         return 0;
     }
 
+    @Override
     public String getInformation() {
         if (getDiscountAmount() == 0) {
             return "";

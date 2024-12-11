@@ -2,10 +2,13 @@ package christmas.repository;
 
 import christmas.domain.VisitDay;
 import christmas.domain.events.ChristmasEvent;
+import christmas.domain.events.Event;
 import christmas.domain.events.GiftEvent;
 import christmas.domain.events.SpecialEvent;
 import christmas.domain.events.WeekdayEvent;
 import christmas.domain.events.WeekendEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventRepository {
 
@@ -23,24 +26,14 @@ public class EventRepository {
         this.visitDay = new VisitDay(visitDayRaw);
     }
 
-    public ChristmasEvent getChristmasEvent() {
-        return new ChristmasEvent(visitDay.getVisitDay());
-    }
-
-    public WeekdayEvent getWeekdayEvent() {
-        return new WeekdayEvent(visitDay.isWeekend(), orderRepository.getDessertNumbers());
-    }
-
-    public WeekendEvent getWeekendEvent() {
-        return new WeekendEvent(visitDay.isWeekend(), orderRepository.getMainNumbers());
-    }
-
-    public SpecialEvent getSpecialEvent() {
-        return new SpecialEvent(visitDay.getVisitDay());
-    }
-
-    public GiftEvent getGiftEvent() {
-        return new GiftEvent(orderRepository.getTotalAmount());
+    public List<Event> getEvents() {
+        List<Event> events = new ArrayList<>();
+        events.add(new ChristmasEvent(visitDay.getVisitDay()));
+        events.add(new WeekdayEvent(visitDay.isWeekend(), orderRepository.getDessertNumbers()));
+        events.add(new WeekendEvent(visitDay.isWeekend(), orderRepository.getMainNumbers()));
+        events.add(new SpecialEvent(visitDay.getVisitDay()));
+        events.add(new GiftEvent(orderRepository.getTotalAmount()));
+        return events;
     }
 
     public int getVisitDay() {

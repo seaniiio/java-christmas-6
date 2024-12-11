@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GiftEvent {
+public class GiftEvent implements Event {
 
     private static final Menu GIFT_MENU = Menu.CHAMPAGNE;
     private static final int GIFT_COUNT = 1;
@@ -25,7 +25,8 @@ public class GiftEvent {
         return gifts;
     }
 
-    public int getGiftAmount() {
+    @Override
+    public int getDiscountAmount() {
         Map<Menu, Integer> gifts = getGifts();
         int amount = 0;
         for (Menu menu : gifts.keySet()) {
@@ -44,10 +45,11 @@ public class GiftEvent {
         return formattedGifts;
     }
 
+    @Override
     public String getInformation() {
-        if (getGiftAmount() == 0) {
+        if (getDiscountAmount() == 0) {
             return "";
         }
-        return String.format("증정 이벤트: -%,d원", getGiftAmount());
+        return String.format("증정 이벤트: -%,d원", getDiscountAmount());
     }
 }

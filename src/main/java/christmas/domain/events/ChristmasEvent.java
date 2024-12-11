@@ -1,6 +1,6 @@
 package christmas.domain.events;
 
-public class ChristmasEvent {
+public class ChristmasEvent implements Event {
 
     private static final int DEFAULT_DISCOUNT_AMOUNT = 1_000;
     private static final int ADDITIONAL_DISCOUNT_AMOUNT = 100;
@@ -12,6 +12,7 @@ public class ChristmasEvent {
         this.day = day;
     }
 
+    @Override
     public int getDiscountAmount() {
         if (day > APPLY_DAY_MAX) {
             return 0;
@@ -19,6 +20,7 @@ public class ChristmasEvent {
         return DEFAULT_DISCOUNT_AMOUNT + (day - 1) * ADDITIONAL_DISCOUNT_AMOUNT;
     }
 
+    @Override
     public String getInformation() {
         if (getDiscountAmount() == 0) {
             return "";

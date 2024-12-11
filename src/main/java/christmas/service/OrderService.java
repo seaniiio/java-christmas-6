@@ -1,13 +1,8 @@
 package christmas.service;
 
-import christmas.constant.Week;
 import christmas.domain.Badge;
-import christmas.domain.Menu;
-import christmas.domain.events.ChristmasEvent;
+import christmas.domain.events.Event;
 import christmas.domain.events.GiftEvent;
-import christmas.domain.events.SpecialEvent;
-import christmas.domain.events.WeekdayEvent;
-import christmas.domain.events.WeekendEvent;
 import christmas.dto.ReceiptDto;
 import christmas.repository.EventRepository;
 import christmas.repository.OrderRepository;
@@ -34,40 +29,47 @@ public class OrderService {
     public ReceiptDto calculate() {
         List<String> ordersInformation = orderRepository.parseOrders();
         int totalAmount = orderRepository.getTotalAmount();
-
-        ChristmasEvent christmasEvent = eventRepository.getChristmasEvent();
-        WeekdayEvent weekdayEvent = eventRepository.getWeekdayEvent();
-        WeekendEvent weekendEvent = eventRepository.getWeekendEvent();
-        SpecialEvent specialEvent = eventRepository.getSpecialEvent();
-        GiftEvent giftEvent = eventRepository.getGiftEvent();
-
-        int totalDiscountAmount = christmasEvent.getDiscountAmount()
-                + weekdayEvent.getDiscountAmount()
-                + weekendEvent.getDiscountAmount()
-                + specialEvent.getDiscountAmount()
-                + giftEvent.getGiftAmount();
-
-        int discountAmountWithoutGift = christmasEvent.getDiscountAmount()
-                + weekdayEvent.getDiscountAmount()
-                + weekendEvent.getDiscountAmount()
-                + specialEvent.getDiscountAmount();
-
+        List<Event> events = eventRepository.getEvents();
+        int totalDiscountAmount = calculateTotalDiscountAmount(events);
+        int discountAmountWithoutGift = calculateDiscountAmountWithoutGift(events);
         int payment = totalAmount - discountAmountWithoutGift;
         Badge badge = Badge.getBadge(totalDiscountAmount);
 
         return new ReceiptDto(eventRepository.getVisitDay()
-                , ordersInformation, totalAmount, giftEvent.formatGifts()
-                , formatEvents(christmasEvent, weekdayEvent, weekendEvent, specialEvent, giftEvent)
+                , ordersInformation, totalAmount, formatGifts(events)
+                , formatEvents(events)
                 , totalDiscountAmount, payment, badge.getName());
     }
 
-    private List<String> formatEvents(ChristmasEvent christmasEvent, WeekdayEvent weekdayEvent, WeekendEvent weekendEvent, SpecialEvent specialEvent, GiftEvent giftEvent) {
-        List<String> events = new ArrayList<>();
-        events.add(christmasEvent.getInformation());
-        events.add(weekdayEvent.getInformation());
-        events.add(weekendEvent.getInformation());
-        events.add(specialEvent.getInformation());
-        events.add(giftEvent.getInformation());
-        return events;
+    private int calculateDiscountAmountWithoutGift(List<Event> events) {
+        return events.stream()
+                .mapToInt(Event::getDiscountAmount)
+                .sum();
+    }
+
+    private List<String> formatGifts(List<Event> events) {
+        for (Event event : events) {
+            if (event.getClass().equals(GiftEvent.class)) {
+                return ((GiftEvent) event).formatGifts();
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private int calculateTotalDiscountAmount(List<Event> events) {
+        int discountAmountWithoutGift = 0;
+        for (Event event : events) {
+            if (event.getClass().equals(GiftEvent.class)) {
+                continue;
+            }
+            discountAmountWithoutGift += event.getDiscountAmount();
+        }
+        return discountAmountWithoutGift;
+    }
+
+    private List<String> formatEvents(List<Event> events) {
+        return events.stream()
+                .map(Event::getInformation)
+                .toList();
     }
 }
