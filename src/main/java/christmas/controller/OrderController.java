@@ -20,9 +20,15 @@ public class OrderController {
     public void run() {
         outputView.printWelcomeMessage();
         InputProcessor.continueUntilNormalInput(this::processVisitDay, outputView::printErrorMessage);
+        InputProcessor.continueUntilNormalInput(this::processMenuInput, outputView::printErrorMessage);
+
     }
 
     private void processVisitDay() {
         orderService.setVisitDay(inputView.getVisitDayInput());
+    }
+
+    private void processMenuInput() {
+        orderService.setMenus(inputView.getMenusInput());
     }
 }

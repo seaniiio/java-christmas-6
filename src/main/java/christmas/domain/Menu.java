@@ -1,5 +1,7 @@
 package christmas.domain;
 
+import christmas.constant.ErrorMessage;
+
 public enum Menu {
     YANG_SONG_SOUP(MenuCategory.APPETIZER, "양송이수프", 6_000),
     TAPAS(MenuCategory.APPETIZER, "타파스", 5_500),
@@ -26,5 +28,18 @@ public enum Menu {
         this.menuCategory = menuCategory;
         this.name = name;
         this.price = price;
+    }
+
+    public static Menu findMenu(String name) {
+        for (Menu menu : Menu.values()) {
+            if (menu.name.equals(name)) {
+                return menu;
+            }
+        }
+        throw new IllegalArgumentException(ErrorMessage.MENU_INPUT_ERROR.getMessage());
+    }
+
+    public MenuCategory getMenuCategory() {
+        return menuCategory;
     }
 }
