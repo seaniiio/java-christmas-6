@@ -50,7 +50,7 @@ public class OrderRepository {
         int dessertCount = 0;
         for (Order order : orders) {
             if (order.getMenu().getMenuCategory().equals(MenuCategory.DESSERT)) {
-                dessertCount += 1;
+                dessertCount += order.getQuantity();
             }
         }
         return dessertCount;
@@ -60,7 +60,7 @@ public class OrderRepository {
         int mainCount = 0;
         for (Order order : orders) {
             if (order.getMenu().getMenuCategory().equals(MenuCategory.MAIN)) {
-                mainCount += 1;
+                mainCount += order.getQuantity();
             }
         }
         return mainCount;

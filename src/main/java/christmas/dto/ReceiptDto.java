@@ -8,7 +8,7 @@ import java.util.Map;
 public class ReceiptDto {
 
     private int day;
-    private List<String> orders = new ArrayList<>();
+    private List<String> orders;
     private int totalAmount;
     private List<String> gifts = new ArrayList<>();
     private List<String> events = new ArrayList<>();
@@ -49,7 +49,13 @@ public class ReceiptDto {
     }
 
     public List<String> getEvents() {
-        return events;
+        List<String> appliedEvents = new ArrayList<>();
+        for (String event : events) {
+            if (!event.isBlank()) {
+                appliedEvents.add(event);
+            }
+        }
+        return appliedEvents;
     }
 
     public int getTotalDiscountAmount() {

@@ -45,6 +45,9 @@ public class GiftEvent {
     }
 
     public String getInformation() {
+        if (getGiftAmount() == 0) {
+            return "";
+        }
         return String.format("증정 이벤트: -%,d원", getGiftAmount());
     }
 }

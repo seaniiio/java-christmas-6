@@ -20,6 +20,9 @@ public class SpecialEvent {
     }
 
     public String getInformation() {
-        return "특별 할인: -" + getDiscountAmount() + "원";
+        if (getDiscountAmount() == 0) {
+            return "";
+        }
+        return String.format("특별 할인: -%,d원", getDiscountAmount());
     }
 }

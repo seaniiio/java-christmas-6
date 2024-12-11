@@ -19,6 +19,9 @@ public class WeekdayEvent {
     }
 
     public String getInformation() {
-        return "평일 할인: -" + getDiscountAmount() + "원";
+        if (getDiscountAmount() == 0) {
+            return "";
+        }
+        return String.format("평일 할인: -%,d원", getDiscountAmount());
     }
 }

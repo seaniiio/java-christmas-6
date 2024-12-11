@@ -20,6 +20,9 @@ public class ChristmasEvent {
     }
 
     public String getInformation() {
-        return "크리스마스 디데이 할인: -" + getDiscountAmount() + "원";
+        if (getDiscountAmount() == 0) {
+            return "";
+        }
+        return String.format("크리스마스 디데이 할인: -%,d원", getDiscountAmount());
     }
 }

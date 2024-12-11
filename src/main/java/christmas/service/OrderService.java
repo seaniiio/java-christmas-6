@@ -47,7 +47,12 @@ public class OrderService {
                 + specialEvent.getDiscountAmount()
                 + giftEvent.getGiftAmount();
 
-        int payment = totalAmount - totalDiscountAmount;
+        int discountAmountWithoutGift = christmasEvent.getDiscountAmount()
+                + weekdayEvent.getDiscountAmount()
+                + weekendEvent.getDiscountAmount()
+                + specialEvent.getDiscountAmount();
+
+        int payment = totalAmount - discountAmountWithoutGift;
         Badge badge = Badge.getBadge(totalDiscountAmount);
 
         return new ReceiptDto(eventRepository.getVisitDay()

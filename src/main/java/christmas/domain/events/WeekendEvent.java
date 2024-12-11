@@ -19,6 +19,9 @@ public class WeekendEvent {
     }
 
     public String getInformation() {
-        return "주말 할인: -" + getDiscountAmount() + "원";
+        if (getDiscountAmount() == 0) {
+            return "";
+        }
+        return String.format("주말 할인: -원", getDiscountAmount());
     }
 }
