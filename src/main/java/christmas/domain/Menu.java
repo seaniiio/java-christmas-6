@@ -8,7 +8,7 @@ public enum Menu {
     CAESAR_SALAD(MenuCategory.APPETIZER, "시저샐러드", 8_000),
 
     TBONE_STEAK(MenuCategory.MAIN, "티본스테이크", 55_000),
-    BARBECUE_RIBS(MenuCategory.MAIN, "바베큐립", 54_000),
+    BARBECUE_RIBS(MenuCategory.MAIN, "바비큐립", 54_000),
     SEAFOOD_PASTA(MenuCategory.MAIN, "해산물파스타", 35_000),
     CHRISTMAS_PASTA(MenuCategory.MAIN, "크리스마스파스타", 25_000),
 

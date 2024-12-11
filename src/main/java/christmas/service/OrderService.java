@@ -50,7 +50,8 @@ public class OrderService {
         int payment = totalAmount - totalDiscountAmount;
         Badge badge = Badge.getBadge(totalDiscountAmount);
 
-        return new ReceiptDto(ordersInformation, totalAmount, giftEvent.formatGifts()
+        return new ReceiptDto(eventRepository.getVisitDay()
+                , ordersInformation, totalAmount, giftEvent.formatGifts()
                 , formatEvents(christmasEvent, weekdayEvent, weekendEvent, specialEvent, giftEvent)
                 , totalDiscountAmount, payment, badge.getName());
     }

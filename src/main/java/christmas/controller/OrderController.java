@@ -24,6 +24,7 @@ public class OrderController {
         InputProcessor.continueUntilNormalInput(this::processMenuInput, outputView::printErrorMessage);
 
         ReceiptDto receiptDto = orderService.calculate();
+        outputView.printReceipt(receiptDto);
     }
 
     private void processVisitDay() {

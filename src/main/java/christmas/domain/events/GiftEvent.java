@@ -41,11 +41,6 @@ public class GiftEvent {
         for (Menu menu : gifts.keySet()) {
             formattedGifts.add(menu.getName() + " " + gifts.get(menu) + "개");
         }
-
-        if (formattedGifts.isEmpty()) {
-            formattedGifts.add("없음");
-        }
-
         return formattedGifts;
     }
 

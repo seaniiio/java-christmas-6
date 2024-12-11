@@ -39,8 +39,11 @@ public class EventRepository {
         return new SpecialEvent(visitDay.getVisitDay());
     }
 
-
     public GiftEvent getGiftEvent() {
         return new GiftEvent(orderRepository.getTotalAmount());
+    }
+
+    public int getVisitDay() {
+        return visitDay.getVisitDay();
     }
 }
