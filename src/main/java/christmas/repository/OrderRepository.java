@@ -22,7 +22,7 @@ public class OrderRepository {
         return instance;
     }
 
-    public void saveMenus(Map<String, Integer> menus) {
+    public void saveOrders(Map<String, Integer> menus) {
         List<Order> ordersBeforeValidate = new ArrayList<>();
         for (String menu : menus.keySet()) {
             ordersBeforeValidate.add(new Order(Menu.findMenu(menu), menus.get(menu)));

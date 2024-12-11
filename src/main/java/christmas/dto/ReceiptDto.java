@@ -3,7 +3,6 @@ package christmas.dto;
 import christmas.domain.Badge;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ReceiptDto {
 
@@ -13,7 +12,7 @@ public class ReceiptDto {
     private List<String> gifts = new ArrayList<>();
     private List<String> events = new ArrayList<>();
     private int totalDiscountAmount = 0;
-    private int expectedPayment = 0;
+    private int expectedPayment;
     private String badge = Badge.NONE.getName();
 
     public ReceiptDto(int day, List<String> orders, int totalAmount, List<String> gifts, List<String> events,

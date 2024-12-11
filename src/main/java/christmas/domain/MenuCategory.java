@@ -8,7 +8,6 @@ public enum MenuCategory {
     BEVERAGE("음료"),
     ;
 
-
     private final String name;
 
     MenuCategory(String name) {

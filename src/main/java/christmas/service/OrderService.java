@@ -23,7 +23,7 @@ public class OrderService {
 
     public void setMenus(String menusInput) {
         Map<String, Integer> menus = Parser.parseMenu(menusInput);
-        orderRepository.saveMenus(menus);
+        orderRepository.saveOrders(menus);
     }
 
     public ReceiptDto calculate() {
@@ -41,7 +41,7 @@ public class OrderService {
                 , totalDiscountAmount, payment, badge.getName());
     }
 
-    private int calculateDiscountAmountWithoutGift(List<Event> events) {
+    private int calculateTotalDiscountAmount(List<Event> events) {
         return events.stream()
                 .mapToInt(Event::getDiscountAmount)
                 .sum();
@@ -56,7 +56,7 @@ public class OrderService {
         return new ArrayList<>();
     }
 
-    private int calculateTotalDiscountAmount(List<Event> events) {
+    private int calculateDiscountAmountWithoutGift(List<Event> events) {
         int discountAmountWithoutGift = 0;
         for (Event event : events) {
             if (event.getClass().equals(GiftEvent.class)) {
