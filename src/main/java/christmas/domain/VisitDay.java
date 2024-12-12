@@ -14,7 +14,7 @@ public record VisitDay(int visitDay) {
         validate(visitDay);
     }
 
-    public int getVisitDay() {
+    public int getDay() {
         return visitDay;
     }
 

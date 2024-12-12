@@ -3,8 +3,12 @@ package christmas.service;
 import christmas.domain.Badge;
 import christmas.domain.MenuCategory;
 import christmas.domain.Order;
+import christmas.domain.events.ChristmasEvent;
 import christmas.domain.events.Event;
 import christmas.domain.events.GiftEvent;
+import christmas.domain.events.SpecialEvent;
+import christmas.domain.events.WeekdayEvent;
+import christmas.domain.events.WeekendEvent;
 import christmas.dto.ReceiptDto;
 import christmas.repository.EventRepository;
 import christmas.repository.OrderRepository;
@@ -25,7 +29,7 @@ public class EventService {
         List<String> ordersInformation = parseOrders();
         int totalAmount = getTotalAmount();
 
-        eventRepository.saveEvents(getDessertNumbers(), getMainNumbers(), totalAmount);
+        setEvents();
         List<Event> events = eventRepository.getEvents();
 
         int totalDiscountAmount = calculateTotalDiscountAmount(events);
@@ -33,10 +37,20 @@ public class EventService {
         int payment = totalAmount - discountAmountWithoutGift;
         Badge badge = Badge.getBadge(totalDiscountAmount);
 
-        return new ReceiptDto(eventRepository.getVisitDay()
+        return new ReceiptDto(eventRepository.getVisitDay().getDay()
                 , ordersInformation, totalAmount, formatGifts(events)
                 , formatEvents(events)
                 , totalDiscountAmount, payment, badge.getName());
+    }
+
+    private void setEvents() {
+        List<Event> events = new ArrayList<>();
+        events.add(new ChristmasEvent(eventRepository.getVisitDay().getDay()));
+        events.add(new GiftEvent(getTotalAmount()));
+        events.add(new WeekdayEvent(eventRepository.getVisitDay().isWeekend(), getDessertNumbers()));
+        events.add(new WeekendEvent(eventRepository.getVisitDay().isWeekend(), getMainNumbers()));
+        events.add(new SpecialEvent(eventRepository.getVisitDay().getDay()));
+        eventRepository.saveEvents(events);
     }
 
     private List<String> parseOrders() {
