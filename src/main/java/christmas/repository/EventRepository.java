@@ -13,10 +13,12 @@ import java.util.List;
 public class EventRepository {
 
     private static final EventRepository instance = new EventRepository();
-    private static final OrderRepository orderRepository = OrderRepository.getInstance();
     private VisitDay visitDay;
+    private List<Event> events;
 
-    private EventRepository() {};
+    private EventRepository() {
+        this.events = new ArrayList<>();
+    };
 
     public static EventRepository getInstance() {
         return instance;
@@ -26,14 +28,16 @@ public class EventRepository {
         this.visitDay = new VisitDay(visitDayRaw);
     }
 
-    public List<Event> getEvents() {
-        List<Event> events = new ArrayList<>();
+    public void saveEvents(int dessertNumbers, int mainNumbers, int totalAmount) {
         events.add(new ChristmasEvent(visitDay.getVisitDay()));
-        events.add(new WeekdayEvent(visitDay.isWeekend(), orderRepository.getDessertNumbers()));
-        events.add(new WeekendEvent(visitDay.isWeekend(), orderRepository.getMainNumbers()));
+        events.add(new GiftEvent(totalAmount));
+        events.add(new WeekdayEvent(visitDay.isWeekend(), dessertNumbers));
+        events.add(new WeekendEvent(visitDay.isWeekend(), mainNumbers));
         events.add(new SpecialEvent(visitDay.getVisitDay()));
-        events.add(new GiftEvent(orderRepository.getTotalAmount()));
-        return events;
+    }
+
+    public List<Event> getEvents() {
+        return new ArrayList<>(events);
     }
 
     public int getVisitDay() {

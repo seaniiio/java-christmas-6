@@ -19,7 +19,7 @@ public class Parser {
         }
     }
 
-    public static Map<String, Integer> parseMenu(String menusInput) {
+    public static Map<String, Integer> parseOrders(String menusInput) {
         try {
             Map<String, Integer> orders = new HashMap<>();
             List<String> menus = Arrays.stream(menusInput.split(",")).toList();

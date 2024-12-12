@@ -1,9 +1,9 @@
 package christmas.service;
 
-import christmas.domain.Badge;
-import christmas.domain.events.Event;
-import christmas.domain.events.GiftEvent;
-import christmas.dto.ReceiptDto;
+import christmas.constant.ErrorMessage;
+import christmas.domain.Menu;
+import christmas.domain.MenuCategory;
+import christmas.domain.Order;
 import christmas.repository.EventRepository;
 import christmas.repository.OrderRepository;
 import christmas.util.Parser;
@@ -13,8 +13,14 @@ import java.util.Map;
 
 public class OrderService {
 
-    private final EventRepository eventRepository = EventRepository.getInstance();
-    private final OrderRepository orderRepository = OrderRepository.getInstance();
+    private static final int MAX_QUANTITY = 20;
+    private final EventRepository eventRepository;
+    private final OrderRepository orderRepository;
+
+    public OrderService() {
+        this.eventRepository = EventRepository.getInstance();
+        this.orderRepository = OrderRepository.getInstance();
+    }
 
     public void setVisitDay(String visitDayInput) {
         int day = Parser.parseDay(visitDayInput);
@@ -22,54 +28,36 @@ public class OrderService {
     }
 
     public void setMenus(String menusInput) {
-        Map<String, Integer> menus = Parser.parseMenu(menusInput);
-        orderRepository.saveOrders(menus);
+        Map<String, Integer> ordersRaw = Parser.parseOrders(menusInput);
+        List<Order> orders = new ArrayList<>();
+        for (String order : ordersRaw.keySet()) {
+            orders.add(new Order(Menu.findMenu(order), ordersRaw.get(order)));
+        }
+        validateOrders(orders);
+        orderRepository.saveOrders(orders);
     }
 
-    public ReceiptDto calculate() {
-        List<String> ordersInformation = orderRepository.parseOrders();
-        int totalAmount = orderRepository.getTotalAmount();
-        List<Event> events = eventRepository.getEvents();
-        int totalDiscountAmount = calculateTotalDiscountAmount(events);
-        int discountAmountWithoutGift = calculateDiscountAmountWithoutGift(events);
-        int payment = totalAmount - discountAmountWithoutGift;
-        Badge badge = Badge.getBadge(totalDiscountAmount);
-
-        return new ReceiptDto(eventRepository.getVisitDay()
-                , ordersInformation, totalAmount, formatGifts(events)
-                , formatEvents(events)
-                , totalDiscountAmount, payment, badge.getName());
+    private void validateOrders(List<Order> orders) {
+        validateOnlyBeverage(orders);
+        validateOverQuantity(orders);
     }
 
-    private int calculateTotalDiscountAmount(List<Event> events) {
-        return events.stream()
-                .mapToInt(Event::getDiscountAmount)
+    private void validateOnlyBeverage(List<Order> orders) {
+        for (Order order : orders) {
+            Menu menu = order.getMenu();
+            if (!menu.getMenuCategory().equals(MenuCategory.BEVERAGE)) {
+                return;
+            }
+        }
+        throw new IllegalArgumentException(ErrorMessage.MENU_INPUT_ERROR.getMessage());
+    }
+
+    private void validateOverQuantity(List<Order> orders) {
+        int totalQuantity = orders.stream()
+                .mapToInt(Order::getQuantity)
                 .sum();
-    }
-
-    private List<String> formatGifts(List<Event> events) {
-        for (Event event : events) {
-            if (event.getClass().equals(GiftEvent.class)) {
-                return ((GiftEvent) event).formatGifts();
-            }
+        if (totalQuantity > MAX_QUANTITY) {
+            throw new IllegalArgumentException(ErrorMessage.MENU_INPUT_ERROR.getMessage());
         }
-        return new ArrayList<>();
-    }
-
-    private int calculateDiscountAmountWithoutGift(List<Event> events) {
-        int discountAmountWithoutGift = 0;
-        for (Event event : events) {
-            if (event.getClass().equals(GiftEvent.class)) {
-                continue;
-            }
-            discountAmountWithoutGift += event.getDiscountAmount();
-        }
-        return discountAmountWithoutGift;
-    }
-
-    private List<String> formatEvents(List<Event> events) {
-        return events.stream()
-                .map(Event::getInformation)
-                .toList();
     }
 }
