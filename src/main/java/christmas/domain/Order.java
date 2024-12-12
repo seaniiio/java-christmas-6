@@ -2,17 +2,12 @@ package christmas.domain;
 
 import christmas.constant.ErrorMessage;
 
-public class Order {
+public record Order(Menu menu, int quantity) {
 
     private static final int MIN_QUANTITY = 1;
 
-    private final Menu menu;
-    private final int quantity;
-
-    public Order(Menu menu, int quantity) {
+    public Order {
         validateQuantity(quantity);
-        this.menu = menu;
-        this.quantity = quantity;
     }
 
     private void validateQuantity(int quantity) {
